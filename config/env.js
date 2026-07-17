@@ -22,6 +22,7 @@ const env = {
   },
   api: {
     baseUrl: requireEnv('API_BASE_URL', 'https://reqres.in'),
+    apiKey: requireEnv('REQRES_API_KEY'),
   },
 };
 
