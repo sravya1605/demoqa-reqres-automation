@@ -3,7 +3,7 @@ const { BasePage } = require('./BasePage');
 class LoginPage extends BasePage {
   constructor(page) {
     super(page);
-    this.usernameInput = page.getByPlaceholder('User Name');
+    this.usernameInput = page.getByPlaceholder('UserName');
     this.passwordInput = page.getByPlaceholder('Password');
     this.loginButton = page.getByRole('button', { name: 'Login' });
   }
