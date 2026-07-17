@@ -48,9 +48,12 @@ UI_BASE_URL=https://demoqa.com
 API_BASE_URL=https://reqres.in
 DEMOQA_USERNAME=<a user you create manually>
 DEMOQA_PASSWORD=<that user's password>
+REQRES_API_KEY=<a free key from https://app.reqres.in>
 ```
 
 > Registration is intentionally **not** automated, per the assignment. Create a user yourself at [demoqa.com/register](https://demoqa.com/register) first, then put its credentials in `.env`.
+
+> reqres.in's `/api/users` endpoints require a free API key as of 2026 (their own public docs describing these as unauthenticated are out of date). Sign up at [app.reqres.in](https://app.reqres.in) - no card required - and copy the key shown on your dashboard.
 
 ## Running Tests
 
@@ -81,19 +84,19 @@ npm run lint:fix
 npm run format      # Prettier
 ```
 
-## Known API Limitation: reqres.in Does Not Persist Demo Data
+## Known API Behavior: reqres.in Does Not Persist Demo Data
 
-reqres.in's free `/api/users` endpoints **echo back whatever you send but never actually store it** (confirmed in reqres.in's own documentation). This has a direct consequence for the assignment's "create → fetch → update" flow:
+reqres.in's `/api/users` endpoints **echo back whatever you send but never actually store it**. This has a direct consequence for the assignment's "create → fetch → update" flow:
 
 - `POST /api/users` returns a freshly generated `id` in the response — but that record doesn't exist server-side afterward.
-- `GET /api/users/:id` only returns real data for reqres.in's 12 seeded fixture users (ids 1–12). Calling it with the id you just "created" would return `404`, not because anything is broken, but because that's the documented behavior of the endpoint.
+- `GET /api/users/:id` only returns real data for reqres.in's 12 seeded fixture users (ids 1–12). Calling it with the id you just "created" would return `404`, not because anything is broken, but because that's the actual behavior of the endpoint.
 - `PUT /api/users/:id` always returns `200` and echoes the update, regardless of whether the id refers to a real record.
 
-**How this project handles it:** the "Fetch Existing User" step validates `GET /api/users/2` (a known seeded fixture, `janet.weaver@reqres.in`), while "Update User" uses the id captured from the "Create User" step. This tests the real, documented contract of the API rather than asserting on behavior the API doesn't actually provide. See the comment at the top of `tests/api/users.spec.js` for the same explanation in context.
+**How this project handles it:** the "Fetch Existing User" step validates `GET /api/users/2` (a known seeded fixture, `janet.weaver@reqres.in`), while "Update User" uses the id captured from the "Create User" step. This tests the real behavior of the API rather than asserting on persistence it doesn't provide. See the comment at the top of `tests/api/users.spec.js` for the same explanation in context.
 
-### Known CI limitation: reqres.in blocks some shared cloud IP ranges
+### API key requirement (discovered during development)
 
-When run from GitHub Actions' shared runners, `POST /api/users` reliably returns `401` instead of `201`, on all three browser projects. This is not a bug in the test or the code — reqres.in's own QA blog documents that its bot/WAF protection can flag traffic from shared datacenter IP ranges (the kind GitHub-hosted runners use), and a stable `User-Agent` header (already set in `api/reqresApi.js`) did not change the result, which points to an IP-level block rather than a header-based one. Running the same suite (`npm run test:api`) from a regular machine or network reaches the real, unblocked endpoint and returns `201` as expected. If this needs to pass in CI specifically, the practical options are a self-hosted runner, or a paid reqres.in tier with an allowlisted API key for the collections-based endpoints (a larger change out of scope here).
+reqres.in's `/api/users` endpoints now require an `x-api-key` header — confirmed by testing directly against the live API from multiple networks, which returned the same `401 missing_api_key` response everywhere. Their own public documentation (`reqres.in/llm.txt`) still describes these endpoints as unauthenticated; that documentation is out of date. A free key from [app.reqres.in](https://app.reqres.in) resolves this — see Setup above.
 
 ## Assumptions Made for DemoQA
 
