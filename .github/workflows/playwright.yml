@@ -26,6 +26,7 @@ jobs:
         env:
           DEMOQA_USERNAME: ${{ secrets.DEMOQA_USERNAME }}
           DEMOQA_PASSWORD: ${{ secrets.DEMOQA_PASSWORD }}
+          REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
         run: npm test
 
       - name: Upload HTML report
