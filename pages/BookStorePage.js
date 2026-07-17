@@ -3,7 +3,7 @@ const { BasePage } = require('./BasePage');
 class BookStorePage extends BasePage {
   constructor(page) {
     super(page);
-    this.bookStoreNavLink = page.getByText('Book Store Application', { exact: true });
+    this.bookStoreNavLink = page.getByRole('button', { name: 'Go To Book Store' });
     this.searchBox = page.locator('#searchBox');
     this.resultRows = page.locator('.rt-tbody .rt-tr-group');
   }
@@ -32,7 +32,8 @@ class BookStorePage extends BasePage {
   async getBookDetails(title) {
     const row = this.getMatchingRows(title).first();
     const cells = row.locator('.rt-td');
-    // Column 0 is a blank spacer cell in demoqa's table; 1/2/3 are Title/Author/Publisher.
+    // Table columns are: Image, Title, Author, Publisher, Action - confirmed
+    // against the live demoqa Book Store table.
 
     return {
       title: await cells.nth(1).innerText(),
