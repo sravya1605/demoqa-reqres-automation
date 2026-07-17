@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 20+ (22 recommended - matches the CI pipeline)
 - npm 9+
 
 ## Setup
@@ -20,6 +20,8 @@ Fill in `.env` with:
 - `DEMOQA_USERNAME` / `DEMOQA_PASSWORD` — credentials for a user you create
   manually at https://demoqa.com (registration is intentionally not
   automated; see README for details).
+- `REQRES_API_KEY` — a free key from https://app.reqres.in, required by
+  reqres.in's `/api/users` endpoints (see README for details).
 
 ## Running tests
 
@@ -56,3 +58,7 @@ conflict with Prettier), so running both should never fight.
 - Use `async`/`await` consistently — avoid mixing in raw `.then()` chains.
 - Add JSDoc comments on exported classes/methods only; skip comments that
   just restate the code.
+- Prefer one clear negative-path test per suite over none — e.g.
+  `tests/api/users.spec.js` covers a non-existent user id alongside the
+  main create/fetch/update flow. Keep each test independent (no shared
+  state between test() blocks).
