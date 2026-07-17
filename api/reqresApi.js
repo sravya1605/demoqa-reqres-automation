@@ -1,11 +1,11 @@
 const env = require('../config/env');
 
-// reqres.in's own QA guidance notes that shared CI IP ranges (e.g. GitHub
-// Actions) are more likely to be flagged by its bot protection than a normal
-// browser request. Sending a stable, realistic User-Agent avoids that.
+// reqres.in's demo /api/users endpoints now require an API key (x-api-key),
+// confirmed directly against the live API - reqres.in's own documentation
+// describing these as unauthenticated is out of date. Get a free key at
+// https://app.reqres.in and set it as REQRES_API_KEY.
 const REQUEST_HEADERS = {
-  'User-Agent':
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  'x-api-key': env.api.apiKey,
 };
 
 function createUser(request, payload) {
