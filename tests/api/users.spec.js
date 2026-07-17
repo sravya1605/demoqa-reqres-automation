@@ -56,4 +56,14 @@ test.describe('reqres.in user API', () => {
       expect(body.updatedAt, 'response should include an updatedAt timestamp').toBeTruthy();
     });
   });
+
+  test('returns 404 for a user id that does not exist', async ({ request }) => {
+    // Negative path: reqres.in's fixture data only covers ids 1-12, so an id
+    // well outside that range is guaranteed not to exist.
+    const NON_EXISTENT_USER_ID = 9999;
+
+    const response = await getUser(request, NON_EXISTENT_USER_ID);
+
+    expect(response.status(), 'fetching a non-existent user should return 404').toBe(404);
+  });
 });
