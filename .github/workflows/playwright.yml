@@ -4,7 +4,6 @@ on:
   push:
   workflow_dispatch:
 
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,13 +14,30 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm install
 
-      - name: Install Playwright browsers
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: echo "version=$(node -e \"console.log(require('@playwright/test/package.json').version)\")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers (cache miss)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
+
+      - name: Install OS dependencies only (cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
 
       - name: Run tests
         env:
@@ -29,6 +45,10 @@ jobs:
           DEMOQA_PASSWORD: ${{ secrets.DEMOQA_PASSWORD }}
           REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
         run: npm test
+
+      - name: Post test summary
+        if: always()
+        run: node scripts/post-ci-summary.js
 
       - name: Upload HTML report
         if: always()
