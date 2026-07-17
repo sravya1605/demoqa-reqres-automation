@@ -18,9 +18,6 @@ module.exports = defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : undefined,
 
-  // Test report requested by the assignment: Playwright's built-in HTML
-  // reporter already produces a shareable, screenshot-embedded report,
-  // so no third-party reporting library is introduced.
   reporter: [['html', { open: 'never' }], ['list']],
 
   use: {
@@ -31,11 +28,6 @@ module.exports = defineConfig({
     trace: 'on-first-retry',
   },
 
-  // Cross-browser support for the UI suite. API tests don't exercise any
-  // browser-specific behavior (they only use Playwright's request context),
-  // so they're scoped to chromium only - running the same HTTP calls 3x back
-  // to back was both redundant and a likely trigger for reqres.in's
-  // burst-traffic protection.
   projects: [
     {
       name: 'chromium',
@@ -50,24 +42,6 @@ module.exports = defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
       testIgnore: '**/api/**',
-    },
-  ],
-});
-
-  // Cross-browser support: run all projects locally, or target one with
-  // `--project=chromium` (used as the default single-browser CI run).
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
     },
   ],
 });
