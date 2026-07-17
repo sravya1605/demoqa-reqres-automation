@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Environment variables (never commit real credentials)
+.env
+
+# Playwright artifacts
+playwright-report/
+test-results/*
+!test-results/.gitkeep
+playwright/.auth/*
+!playwright/.auth/.gitkeep
+blob-report/
+
+# OS/editor
+.DS_Store
+.vscode/
+*.log
