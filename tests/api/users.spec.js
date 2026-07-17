@@ -12,19 +12,6 @@ const SEEDED_USER_EMAIL = 'janet.weaver@reqres.in';
 
 test.describe('reqres.in user API', () => {
   test('creates, fetches, and updates a user', async ({ request }) => {
-    // GitHub Actions' shared runners are Azure-hosted, and reqres.in's demo
-    // endpoints reliably return 401 from that IP range (confirmed via a
-    // controlled experiment: a single isolated request still fails
-    // identically, ruling out rate-limiting/burst traffic as the cause -
-    // see README "Known CI limitation"). This is an infrastructure block,
-    // not a defect in the test, so it's skipped explicitly in CI rather than
-    // left as an unexplained red result. It runs normally everywhere else.
-    // eslint-disable-next-line playwright/no-skipped-test -- intentional, permanent, reasoned skip (not a forgotten one)
-    test.skip(
-      !!process.env.CI,
-      'reqres.in blocks GitHub Actions runner IPs (401) - see README "Known CI limitation"',
-    );
-
     // Arrange
     let createdUserId;
 
