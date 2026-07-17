@@ -2,7 +2,7 @@ name: Playwright Tests
 
 on:
   push:
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   test:
@@ -22,7 +22,7 @@ jobs:
 
       - name: Get installed Playwright version
         id: playwright-version
-        run: echo "version=$(node -e \"console.log(require('@playwright/test/package.json').version)\")" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(node scripts/get-playwright-version.js)" >> "$GITHUB_OUTPUT"
 
       - name: Cache Playwright browsers
         id: playwright-cache
