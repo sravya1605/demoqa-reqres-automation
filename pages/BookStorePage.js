@@ -5,7 +5,7 @@ class BookStorePage extends BasePage {
     super(page);
     this.bookStoreNavLink = page.getByRole('button', { name: 'Go To Book Store' });
     this.searchBox = page.locator('#searchBox');
-    this.resultRows = page.locator('.rt-tbody .rt-tr-group');
+    this.resultRows = page.locator('table tbody tr');
   }
 
   /** Navigates to the Book Store from the logged-in profile menu. */
@@ -24,16 +24,14 @@ class BookStorePage extends BasePage {
 
   /**
    * Returns { title, author, publisher } for the first result row matching the
-   * given title. The demoqa results table has no accessible roles/labels, so
-   * cells are read by column position (Title, Author, Publisher) within the
-   * matched row - this is the actual DOM contract of the react-table widget,
-   * not an arbitrary guess.
+   * given title. Cells are read by column position within the matched row
+   * (Image, Title, Author, Publisher), matching the catalog table's actual
+   * semantic HTML structure.
    */
   async getBookDetails(title) {
     const row = this.getMatchingRows(title).first();
-    const cells = row.locator('.rt-td');
-    // Table columns are: Image, Title, Author, Publisher, Action - confirmed
-    // against the live demoqa Book Store table.
+    const cells = row.locator('td');
+    // Confirmed against the live Book Store catalog page: Image, Title, Author, Publisher.
 
     return {
       title: await cells.nth(1).innerText(),
