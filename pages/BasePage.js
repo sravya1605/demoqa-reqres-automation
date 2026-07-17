@@ -3,7 +3,7 @@ const env = require('../config/env');
 class BasePage {
   constructor(page) {
     this.page = page;
-    this.logoutButton = page.getByRole('button', { name: 'Log out' });
+    this.logoutButton = page.getByRole('button', { name: 'Logout' });
     this.usernameDisplay = page.locator('#userName-value');
   }
 
