@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { defineConfig, devices } = require('@playwright/test');
 
+
 /**
  * Central Playwright configuration.
  * All environment-specific values (base URLs, timeouts) are read from
